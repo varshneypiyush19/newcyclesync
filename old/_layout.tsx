@@ -24,7 +24,7 @@ export default function RootLayout() {
         name="Register"
         options={{
           headerStyle: {
-            backgroundColor: "#655950",
+            backgroundColor: "#EAA4FA",
           },
           headerShadowVisible: false,
           title: "",
@@ -34,7 +34,7 @@ export default function RootLayout() {
         name="Login"
         options={{
           headerStyle: {
-            backgroundColor: "#655950",
+            backgroundColor: "#EAA4FA",
           },
           headerShadowVisible: false, // iOS 15+, removes hairline
 
