@@ -37,6 +37,15 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "apiKey": "AIzaSyBpCAA_zXk2ElNZ8wk4lu_Zh45TyQdZ1ug",
+      "authDomain": "cyclesync-bcfdc.firebaseapp.com",
+      "projectId": "cyclesync-bcfdc",
+      "storageBucket": "cyclesync-bcfdc.firebasestorage.app",
+      "messagingSenderId": "1019349126653",
+      "appId": "1:1019349126653:web:75f85607e2643d6c629d94",
+      "measurementId": "G-GLY12LDJJ9"
     }
   }
 }
