@@ -227,7 +227,6 @@ const AgeInput = ({ current, handleAnswer, inputValue, setInputValue }) => {
               }}
               value={inputValue}
               onChangeText={setInputValue}
-              // placeholder="Type your answer here"
             />
           </View>
 

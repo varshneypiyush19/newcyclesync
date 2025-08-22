@@ -102,10 +102,7 @@ export default function WelcomeLayout() {
     );
   }
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: "#EAA4FA" }}
-      edges={["top", "left", "right"]}
-    >
+    <SafeAreaView style={{ flex: 1 }} edges={["top", "left", "right"]}>
       <StatusBar style="dark" />
       <Mainwelcome current={Texts[currentIndex]} onNext={handleNext} />
     </SafeAreaView>

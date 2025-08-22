@@ -1,9 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const mainwelcome = ({ current, onNext }) => {
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       {/* Top image section */}
       <View
         style={{
@@ -71,7 +72,7 @@ const mainwelcome = ({ current, onNext }) => {
           style={{
             flexDirection: "row",
             width: "100%",
-            marginTop: 80,
+            marginTop: 40,
             marginRight: 50,
             justifyContent: "flex-end",
           }}
@@ -112,7 +113,7 @@ const mainwelcome = ({ current, onNext }) => {
           </TouchableOpacity> */}
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

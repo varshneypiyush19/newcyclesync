@@ -10,10 +10,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* <View style={styles.statusBarBackground} /> */}
 
       <StatusBar style="dark" />
@@ -210,7 +211,7 @@ export default function HomeScreen() {
           </Text>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

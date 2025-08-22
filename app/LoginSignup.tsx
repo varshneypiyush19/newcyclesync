@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Mainwelcome = () => {
   const [agreed, setAgreed] = useState(false);
@@ -33,7 +34,7 @@ const Mainwelcome = () => {
     } // Call parent action
   };
   return (
-    <View style={{ flex: 1, backgroundColor: "#655950" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#655950" }}>
       {/* Top image section */}
       <View
         style={{
@@ -169,7 +170,7 @@ const Mainwelcome = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

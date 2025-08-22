@@ -24,6 +24,12 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import {
+  getCurrentDayInCycle,
+  getDaysUntilNextPeriod,
+  getDaysUntilOvulation,
+  getDaysUntilPeriodEnds,
+} from "../utils/CycleUtils";
 const calculateCyclePhase = (
   lastPeriodDateStr: string,
   cycleLength: number = 28
@@ -39,16 +45,17 @@ const calculateCyclePhase = (
   const menstrualEnd = 5;
   const follicularEnd = 13;
   const ovulationEnd = 16;
+
   if (currentDayOfCycle <= menstrualEnd) {
     return {
-      phase: "Menstrual Phase",
+      phase: "Menstrual",
       day: currentDayOfCycle,
       color: "#993341",
       colorLight: "#FFACAD",
     }; // Pinkish Red
   } else if (currentDayOfCycle <= follicularEnd) {
     return {
-      phase: "Follicular Phase",
+      phase: "Follicular",
       day: currentDayOfCycle - menstrualEnd,
       color: "#9FE0A1",
       colorLight: "#CCFFD7",
@@ -62,27 +69,13 @@ const calculateCyclePhase = (
     }; // Yellow
   } else {
     return {
-      phase: "Luteal Phase",
+      phase: "Luteal",
       day: currentDayOfCycle - ovulationEnd,
       color: "#D9C7C0",
       colorLight: "#F2DFD6",
     }; // Purple
   }
 };
-//   if (currentDayOfCycle <= menstrualEnd) {
-//     return { phase: "Menstrual Phase", day: currentDayOfCycle };
-//   } else if (currentDayOfCycle <= follicularEnd) {
-//     return {
-//       phase: "Follicular Phase",
-//       day: currentDayOfCycle - menstrualEnd,
-//     };
-//   } else if (currentDayOfCycle <= ovulationEnd) {
-//     return { phase: "Ovulation", day: currentDayOfCycle - follicularEnd };
-//   } else {
-//     return { phase: "Luteal Phase", day: currentDayOfCycle - ovulationEnd };
-//   }
-// };
-
 function getCurrentWeekDates() {
   const today = new Date();
   const dayOfWeek = today.getDay(); // 0 (Sun) - 6 (Sat)
@@ -109,7 +102,11 @@ export default function MainScreen() {
     lastPeriod: "",
     color: "",
     colorLight: "",
+    daysUntilOvulation: 0,
+    daysUntilPeriodEnds: 0,
+    daysUntilNextPeriod: 0,
   });
+
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(-250)).current; // Sidebar width is 250
   // const symptoms = "Tired"; // This can also be fetched if stored
@@ -151,6 +148,22 @@ export default function MainScreen() {
         const lastPeriod = questionnaire.answers[3]; // index 3 for lastPeriod
         const cycleRegularity = parseInt(questionnaire.answers[5]) || 28; // index 5 for cycleRegularity
         const cycleInfo = calculateCyclePhase(lastPeriod, cycleRegularity);
+
+        const currentDay = getCurrentDayInCycle(lastPeriod, cycleRegularity);
+        const daysUntilOvulation = getDaysUntilOvulation(currentDay);
+        const daysUntilPeriodEnds = getDaysUntilPeriodEnds(currentDay);
+        const daysUntilNextPeriod = getDaysUntilNextPeriod(
+          currentDay,
+          cycleRegularity
+        );
+        // setUserData({
+        //   name: userProfile.fullName || "User",
+        //   phase: cycleInfo.phase,
+        //   phaseDay: cycleInfo.day,
+        //   lastPeriod: lastPeriod || 14,
+        //   color: cycleInfo.color ?? "#993341",
+        //   colorLight: cycleInfo.colorLight ?? "#FFACAD",
+        // });
         setUserData({
           name: userProfile.fullName || "User",
           phase: cycleInfo.phase,
@@ -158,6 +171,9 @@ export default function MainScreen() {
           lastPeriod: lastPeriod || 14,
           color: cycleInfo.color ?? "#993341",
           colorLight: cycleInfo.colorLight ?? "#FFACAD",
+          daysUntilOvulation,
+          daysUntilPeriodEnds: daysUntilPeriodEnds ?? 0,
+          daysUntilNextPeriod,
         });
         setStatus("success");
       } catch (err) {
@@ -279,7 +295,7 @@ export default function MainScreen() {
             showsHorizontalScrollIndicator={false}
             style={{
               width: "100%",
-              backgroundColor: "#993341",
+              backgroundColor: userData.color,
               borderBottomLeftRadius: 26,
               borderBottomRightRadius: 26,
               paddingBottom: 30,
@@ -349,28 +365,6 @@ export default function MainScreen() {
               })}
             </View>
           </ScrollView>
-          {/* {["21 M", "22 T", "23 W", "24 Today", "25 F", "26 S", "27 S"].map(
-            (d, i) => (
-              <View
-                key={i}
-                style={[
-                  styles.dateItem,
-                  d.includes("Today") && styles.todayBox,
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.dateText,
-                    d.includes("Today") && styles.todayText,
-                  ]}
-                >
-                  {d}
-                </Text>
-              </View>
-            )
-          )} */}
-
-          {/* Period Day & Stats */}
           <View
             style={{
               backgroundColor: "transparent",
@@ -401,7 +395,10 @@ export default function MainScreen() {
                 <View style={styles.periodInfoBox}>
                   <Text style={styles.periodInfoTitle}>Periods end in</Text>
                   <Text style={styles.periodInfoValue}>
-                    2 <Text style={styles.daysLabel}>Days</Text>
+                    {userData.daysUntilPeriodEnds !== null
+                      ? userData.daysUntilPeriodEnds
+                      : "— "}
+                    <Text style={styles.daysLabel}>Days</Text>
                   </Text>
                 </View>
                 <View
@@ -412,7 +409,10 @@ export default function MainScreen() {
                 >
                   <Text style={styles.periodInfoTitle}>Ovulation in</Text>
                   <Text style={styles.periodInfoValue}>
-                    {userData.lastPeriod}
+                    {/* {userData.lastPeriod} */}
+                    {userData.daysUntilOvulation === 0
+                      ? "Now"
+                      : userData.daysUntilOvulation}
                     <Text style={styles.daysLabel}> Days</Text>
                   </Text>
                 </View>
@@ -545,7 +545,7 @@ const styles = StyleSheet.create({
   },
   dateRow: {
     flexDirection: "row",
-    backgroundColor: "#993341",
+    // backgroundColor: "#993341",
     paddingVertical: 12,
     paddingHorizontal: 8,
   },
@@ -803,233 +803,3 @@ const styles = StyleSheet.create({
     gap: 10,
   },
 });
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#FEFDE9",
-//   },
-//   scrollContent: {
-//     padding: 16,
-//     paddingBottom: 80,
-//   },
-//   headerRow: {
-//     flexDirection: "row",
-//     justifyContent: "space-between",
-//     alignItems: "center",
-//     marginBottom: 16,
-//   },
-//   headerText: {
-//     fontSize: 18,
-//   },
-//   monthRow: {
-//     flexDirection: "row",
-//     gap: 8,
-//     marginBottom: 8,
-//   },
-//   monthText: {
-//     fontSize: 16,
-//     fontWeight: "500",
-//   },
-//   calendarRow: {
-//     flexDirection: "row",
-//     justifyContent: "space-between",
-//     marginBottom: 16,
-//     gap: 15,
-//   },
-//   calendarDay: {
-//     width: 40,
-//     height: 40,
-//     borderRadius: 20,
-//     borderWidth: 1,
-//     borderColor: "#888",
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-//   activeCalendarDay: {
-//     backgroundColor: "#e75480",
-//   },
-//   calendarDayText: {
-//     color: "black",
-//   },
-//   activeCalendarDayText: {
-//     color: "white",
-//   },
-//   inputRow: {
-//     flexDirection: "row",
-//     justifyContent: "space-around",
-//     marginBottom: 24,
-//   },
-//   inputButton: {
-//     flexDirection: "row",
-//     alignItems: "center",
-//     backgroundColor: "white",
-//     paddingHorizontal: 16,
-//     paddingVertical: 8,
-//     borderRadius: 20,
-//     elevation: 2,
-//   },
-//   inputButtonText: {
-//     color: "black",
-//     fontSize: 14,
-//   },
-//   phaseContainer: {
-//     alignItems: "center",
-//     marginBottom: 24,
-//   },
-//   phaseCircle: {
-//     width: 160,
-//     height: 160,
-//     borderRadius: 100,
-//     backgroundColor: "rgba(133, 82, 239, 1)",
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-//   phaseText: {
-//     color: "white",
-//     fontSize: 16,
-//     textAlign: "center",
-//     fontWeight: "600",
-//   },
-//   cardsContainer: {
-//     marginBottom: 16,
-//   },
-//   card: {
-//     borderRadius: 16,
-//     padding: 16,
-//     marginBottom: 16,
-//     elevation: 2,
-//   },
-//   orangeCard: {
-//     backgroundColor: "#ffe5b4",
-//   },
-//   yellowCard: {
-//     backgroundColor: "#fff9c4",
-//   },
-//   greenCard: {
-//     backgroundColor: "#d0f0c0",
-//   },
-//   pinkCard: {
-//     backgroundColor: "#f8c8dc",
-//   },
-//   cardTitle: {
-//     fontWeight: "700",
-//     marginBottom: 8,
-//   },
-//   cardText: {
-//     fontSize: 14,
-//     lineHeight: 18,
-//   },
-//   profileCircle: {
-//     width: 46,
-//     height: 46,
-//     borderRadius: 50,
-//     backgroundColor: "#a01aa0",
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-//   profileInitial: {
-//     color: "white",
-//     fontSize: 16,
-//     fontWeight: "bold",
-//   },
-//   centeredContainer: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-//   sidebarOverlay: {
-//     flex: 1,
-//     backgroundColor: "rgba(0,0,0,0.3)",
-//     flexDirection: "row",
-//     justifyContent: "flex-start",
-//     alignItems: "stretch",
-//   },
-//   sidebar: {
-//     width: 250,
-//     backgroundColor: "#fff",
-//     paddingTop: 60,
-//     paddingHorizontal: 20,
-//     alignItems: "center",
-//     height: "100%",
-//     shadowColor: "#000",
-//     shadowOpacity: 0.2,
-//     shadowRadius: 8,
-//     elevation: 8,
-//     borderTopRightRadius: 16,
-//     borderBottomRightRadius: 16,
-//   },
-//   sidebarProfileCircle: {
-//     width: 60,
-//     height: 60,
-//     borderRadius: 30,
-//     backgroundColor: "#a01aa0",
-//     justifyContent: "center",
-//     alignItems: "center",
-//     marginBottom: 16,
-//   },
-//   sidebarProfileInitial: {
-//     color: "white",
-//     fontSize: 28,
-//     fontWeight: "bold",
-//   },
-//   sidebarName: {
-//     fontSize: 18,
-//     fontWeight: "bold",
-//     marginBottom: 32,
-//     color: "#333",
-//   },
-//   sidebarLogoutButton: {
-//     backgroundColor: "#EAA4FA",
-//     paddingVertical: 10,
-//     paddingHorizontal: 30,
-//     borderRadius: 20,
-//   },
-//   sidebarLogoutText: {
-//     color: "#fff",
-//     fontWeight: "bold",
-//     fontSize: 16,
-//   },
-//   sidebarCloseIcon: {
-//     position: "absolute",
-//     top: 16,
-//     right: 16,
-//     zIndex: 10,
-//   },
-//   calendarDayOfWeek: {
-//     fontSize: 10,
-//     color: "black",
-//     textAlign: "center",
-//     marginTop: 2,
-//   },
-//   calendarDayCount: {
-//     position: "absolute",
-//     top: -16,
-//     height: 20,
-//     width: 20,
-//     right: -20,
-//     fontSize: 10,
-//     color: "#fff",
-//     backgroundColor: "rgba(226, 58, 172, 1)",
-//     borderRadius: 10,
-//     paddingHorizontal: 4,
-//     fontWeight: "bold",
-//     zIndex: 2,
-//     alignItems: "center",
-//     justifyContent: "center",
-//     paddingTop: 2,
-//   },
-//   passedCalendarDay: {
-//     backgroundColor: "#f5cee9",
-//     borderColor: "rgba(226, 58, 172, 1)",
-//   },
-//   passedCalendarDayText: {
-//     color: "rgba(226, 58, 172, 1)",
-//   },
-//   todayCalendarDay: {
-//     backgroundColor: "rgba(226, 58, 172, 0.72)",
-//   },
-//   todayCalendarDayText: {
-//     color: "white",
-//     fontWeight: "bold",
-//   },
-// });

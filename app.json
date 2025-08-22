@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "newcyclesync",
+    "name": "CycleSync",
     "slug": "newcyclesync",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.varshneypiyush19.newcyclesync"
     },
     "web": {
       "bundler": "metro",
@@ -45,7 +46,11 @@
       "storageBucket": "cyclesync-bcfdc.firebasestorage.app",
       "messagingSenderId": "1019349126653",
       "appId": "1:1019349126653:web:75f85607e2643d6c629d94",
-      "measurementId": "G-GLY12LDJJ9"
+      "measurementId": "G-GLY12LDJJ9",
+      "router": {},
+      "eas": {
+        "projectId": "b0d91550-5070-40a7-8820-5023370b7e87"
+      }
     }
   }
 }

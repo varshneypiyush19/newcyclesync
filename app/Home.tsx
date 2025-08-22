@@ -43,15 +43,19 @@ const questions = [
 export default function QuestionFlow() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState(Array(questions.length).fill(""));
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState<any>("");
   const [loading, setLoading] = useState(false);
   const current = questions[currentIndex];
   const totalQuestions = questions.length;
   const progress = (currentIndex + 1) / totalQuestions;
   console.log("home");
   const handleAnswer = async () => {
+    // console.log("valanswer is this ", val);
     const updatedAnswers = [...answers];
+    console.log("🧪 Answers going to Firestore:", updatedAnswers);
+    // let answerToStore = inputValue;
     let answerToStore = inputValue;
+
     if (Array.isArray(inputValue)) {
       answerToStore = inputValue.join(", "); // or any separator you want
     }
