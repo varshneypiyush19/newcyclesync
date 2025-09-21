@@ -4,7 +4,7 @@
     "slug": "newcyclesync",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icon.jpg",
     "scheme": "newcyclesync",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,23 +13,23 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/adaptive-icon.jpg",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.varshneypiyush19.newcyclesync"
+      "package": "com.varshneypiyush19.cyclesync"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.jpg"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/splash-icon.jpg",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
@@ -49,7 +49,7 @@
       "measurementId": "G-GLY12LDJJ9",
       "router": {},
       "eas": {
-        "projectId": "b0d91550-5070-40a7-8820-5023370b7e87"
+        "projectId": "c635d3cb-21e2-401d-8852-71b72ffa3964"
       }
     }
   }
