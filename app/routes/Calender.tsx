@@ -1,11 +1,12 @@
 import Footer from "@/components/Footer";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "expo-router";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { CalendarList } from "react-native-calendars";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { auth, db } from "../firebaseConfig";
+import { auth, db } from "../../firebaseConfig";
 
 interface CalendarScreenProps {
   navigation?: any;
@@ -16,6 +17,11 @@ const CalendarScreen: React.FC<CalendarScreenProps> = () => {
   const [lastFilledDate, setLastFilledDate] = useState<string>("");
   const [markedDates, setMarkedDates] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
 
   useEffect(() => {
     const fetchLastDate = async () => {

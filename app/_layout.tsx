@@ -14,13 +14,13 @@ export default function RootLayout() {
           headerShown: false,
         }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="LoginSignup"
         options={{
           headerShown: false,
         }}
-      />
-      <Stack.Screen
+      /> */}
+      {/* <Stack.Screen
         name="Register"
         options={{
           headerStyle: {
@@ -29,8 +29,8 @@ export default function RootLayout() {
           headerShadowVisible: false,
           title: "",
         }}
-      />
-      <Stack.Screen
+      /> */}
+      {/* <Stack.Screen
         name="Login"
         options={{
           headerStyle: {
@@ -40,16 +40,16 @@ export default function RootLayout() {
 
           title: "",
         }}
-      />
-      <Stack.Screen
+      /> */}
+      {/* <Stack.Screen
         name="Home"
         options={{
           headerShown: false,
         }}
-      />
-      <Stack.Screen name="Main" options={{ headerShown: false }} />
+      /> */}
+      {/* <Stack.Screen name="Main" options={{ headerShown: false }} /> */}
 
-      <Stack.Screen name="Calender" options={{ headerShown: false }} />
+      {/* <Stack.Screen name="Calender" options={{ headerShown: false }} /> */}
     </Stack>
   );
 }

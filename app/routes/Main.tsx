@@ -4,9 +4,9 @@ import {
   FontAwesome5,
   Ionicons,
 } from "@expo/vector-icons";
-import { useRouter } from "expo-router"; // Import the router
+import { useNavigation, useRouter } from "expo-router"; // Import the router
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../firebaseConfig";
+import { auth, db } from "../../firebaseConfig";
 
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useRef, useState } from "react";
@@ -29,7 +29,7 @@ import {
   getDaysUntilNextPeriod,
   getDaysUntilOvulation,
   getDaysUntilPeriodEnds,
-} from "../utils/CycleUtils";
+} from "../../utils/CycleUtils";
 const calculateCyclePhase = (
   lastPeriodDateStr: string,
   cycleLength: number = 28
@@ -111,19 +111,24 @@ export default function MainScreen() {
   const slideAnim = useRef(new Animated.Value(-250)).current; // Sidebar width is 250
   // const symptoms = "Tired"; // This can also be fetched if stored
   console.log("mainpage");
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const user = auth.currentUser;
         if (!user) {
-          router.replace("/Login");
+          router.replace("/auth/Login");
           return;
         }
         // Fetch user profile
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (!userDoc.exists()) {
-          router.replace("/Home");
+          router.replace("/routes/Home");
           return;
         }
         const userProfile = userDoc.data();
@@ -141,7 +146,7 @@ export default function MainScreen() {
           }
         }
         if (!questionnaireDoc || !questionnaireDoc.exists()) {
-          router.replace("/Home");
+          router.replace("/routes/Home");
           return;
         }
         const questionnaire = questionnaireDoc.data();
@@ -262,7 +267,7 @@ export default function MainScreen() {
                 onPress={async () => {
                   await auth.signOut();
                   setSidebarVisible(false);
-                  router.replace("/Login");
+                  router.replace("/auth/Login");
                 }}
               >
                 <Text style={styles.sidebarLogoutText}>Logout</Text>
@@ -427,14 +432,14 @@ export default function MainScreen() {
             </View>
 
             {/* Greeting & Mood */}
-            <Text style={styles.greeting}>Hi, {userData.name}!</Text>
+            {/* <Text style={styles.greeting}>Hi, {userData.name}!</Text>
             <Text style={styles.subtitle}>
               How{"'"}re you feeling? you can log your mood, symptoms and more
               here…
             </Text>
             <TouchableOpacity style={styles.feelingButton}>
               <Text style={styles.feelingButtonText}>I am feeling…</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {/* Tips Header */}
             <Text style={styles.tipsTitle}>
@@ -444,17 +449,17 @@ export default function MainScreen() {
             {/* Tips Cards */}
             {[
               {
-                img: require("../assets/images/dashboard/tip1.png"),
+                img: require("../../assets/images/dashboard/tip1.png"),
                 text: "You can do some light stretching as well as some meditation and\nTake rest.",
                 bg: "#DFF4FF",
               },
               {
-                img: require("../assets/images/dashboard/tip2.png"),
+                img: require("../../assets/images/dashboard/tip2.png"),
                 text: "You can eat oranges or have a ginger tea. xyz kmn…..",
                 bg: "#FFEFE3",
               },
               {
-                img: require("../assets/images/dashboard/tip3.png"),
+                img: require("../../assets/images/dashboard/tip3.png"),
                 text: "Prioritize self-care, adjust your workload, Listening to your favorite music helps too",
                 bg: "#E5EFF3",
               },
@@ -465,9 +470,6 @@ export default function MainScreen() {
               >
                 <Image source={tip.img} style={styles.tipImage} />
                 <Text style={styles.tipText}>{tip.text}</Text>
-                {/* <TouchableOpacity style={styles.tipArrow}>
-                  <Entypo name="chevron-right" size={20} />
-                </TouchableOpacity> */}
               </View>
             ))}
 
@@ -475,19 +477,6 @@ export default function MainScreen() {
             <Text style={styles.healthExamText}>
               Suspecting or having any health condition?{"\n"}Take a test.
             </Text>
-            {/* <View style={styles.healthExamBox}>
-              <View>
-                <Text style={styles.healthExamTitle}>Health Exam</Text>
-                <Text style={styles.healthExamDesc}>
-                  Answer some simple questions to better understand your body…
-                </Text>
-              </View>
-              <TouchableOpacity>
-                <Entypo name="chevron-right" size={20} />
-              </TouchableOpacity>
-            </View> */}
-
-            {/* Footer Quote */}
             <View style={styles.quoteBox}>
               <Text style={styles.quoteText}>
                 {'"'}Periods are powerful, but so am I{'"'} 💪🏼✨

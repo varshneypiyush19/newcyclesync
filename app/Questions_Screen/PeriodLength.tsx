@@ -22,7 +22,7 @@ export default function PeriodLength({
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FEFDE9" }}>
       <View
         style={{
-          flex: 1 / 5,
+          paddingTop: 10,
           justifyContent: "space-around",
           // alignItems: "center",
           flexDirection: "row",
@@ -39,16 +39,11 @@ export default function PeriodLength({
         </View>
         <View>
           <MaterialDesignIcons name="water-check-outline" size={20} />
-          {/* <Ionicons
-            name="scale-outline"
-            size={20}
-            style={{ fontWeight: 900 }}
-          /> */}
         </View>
       </View>
       <View style={{ flex: 1 }}>
         {/* Title */}
-        <View style={{ alignItems: "center", paddingHorizontal: 70 }}>
+        <View style={{ alignItems: "center" }}>
           <Text style={{ fontSize: 30, textAlign: "center" }}>
             {current.question}
           </Text>

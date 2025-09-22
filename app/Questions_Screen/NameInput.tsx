@@ -52,9 +52,12 @@ const NameInput = ({ current, handleAnswer, inputValue, setInputValue }) => {
                   marginBottom: 24,
                   fontSize: 16,
                   width: "90%",
+                  color: "#000",
                 }}
                 value={inputValue}
                 onChangeText={setInputValue}
+                placeholderTextColor={"grey"}
+
                 // placeholder="Type your answer here"
               />
             </View>

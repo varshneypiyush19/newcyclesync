@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { CalendarList } from "react-native-calendars";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { auth, db } from "../firebaseConfig";
+import { auth, db } from "./firebaseConfig";
 
 interface CalendarScreenProps {
   navigation?: any;

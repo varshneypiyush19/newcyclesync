@@ -1,21 +1,24 @@
 import Footer from "@/components/Footer";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "expo-router";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { CalendarList } from "react-native-calendars";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { auth, db } from "../firebaseConfig";
+import { auth, db } from "../../firebaseConfig";
 
-interface CalendarScreenProps {
-  navigation?: any;
-}
-
-const CalendarScreen: React.FC<CalendarScreenProps> = () => {
+const CalendarScreen: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [lastFilledDate, setLastFilledDate] = useState<string>("");
   const [markedDates, setMarkedDates] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
 
   useEffect(() => {
     const fetchLastDate = async () => {
@@ -116,6 +119,7 @@ const CalendarScreen: React.FC<CalendarScreenProps> = () => {
         setLastFilledDate(selectedDate);
         Alert.alert("Success", "Last period date saved.");
       }
+      setEditMode(false);
     } catch (err) {
       Alert.alert("Error", "Failed to save date.");
     } finally {
@@ -125,55 +129,52 @@ const CalendarScreen: React.FC<CalendarScreenProps> = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fcd6f9" }}>
-      <View style={styles.topBar}>
-        <TouchableOpacity>
-          {/* <Ionicons name="arrow-back" size={24} color="black" /> */}
-        </TouchableOpacity>
-        <Text style={styles.topBarTitle}>Calender</Text>
-
-        {/* <Text style={styles.topBarTitle}>Edit Period</Text> */}
-        <TouchableOpacity>
-          <Ionicons name="calendar-outline" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-
       <View style={styles.wrapper}>
+        <View style={styles.headerRow}>
+          <Text style={styles.title}>Last Period Date</Text>
+          <TouchableOpacity onPress={() => setEditMode((v) => !v)}>
+            <Ionicons name="calendar-outline" size={28} color="#a01aa0" />
+          </TouchableOpacity>
+        </View>
         {lastFilledDate ? (
-          <Text style={styles.info}>Last filled date: {lastFilledDate}</Text>
+          <Text style={styles.info}>Saved date: {lastFilledDate}</Text>
         ) : (
           <Text style={styles.info}>No last period date found.</Text>
         )}
-        <View style={styles.calendarCard}>
-          <CalendarList
-            current={selectedDate || new Date().toISOString().split("T")[0]}
-            pastScrollRange={1}
-            futureScrollRange={0}
-            scrollEnabled={true}
-            showScrollIndicator={false}
-            markingType={"custom"}
-            markedDates={markedDates}
-            onDayPress={handleDayPress}
-            theme={{
-              calendarBackground: "#FFF4F4",
-              textMonthFontWeight: "bold",
-              textDayFontSize: 14,
-              textDayHeaderFontSize: 14,
-              textSectionTitleColor: "#000000",
-              todayTextColor: "#EAA4FA",
-              arrowColor: "#000",
-              textMonthFontSize: 18,
-            }}
-          />
-        </View>
-        {/* <TouchableOpacity
-          style={styles.saveButton}
-          onPress={handleSave}
-          disabled={loading}
-        >
-          <Text style={styles.saveButtonText}>
-            {loading ? "Saving..." : "Save Date"}
-          </Text>
-        </TouchableOpacity> */}
+        {editMode && (
+          <>
+            <CalendarList
+              current={selectedDate || new Date().toISOString().split("T")[0]}
+              pastScrollRange={1}
+              futureScrollRange={0}
+              scrollEnabled={true}
+              showScrollIndicator={false}
+              markingType={"custom"}
+              markedDates={markedDates}
+              onDayPress={handleDayPress}
+              theme={{
+                calendarBackground: "#FFF4F4",
+                textMonthFontWeight: "bold",
+                textDayFontSize: 14,
+                textDayHeaderFontSize: 14,
+                textSectionTitleColor: "#000000",
+                todayTextColor: "#EAA4FA",
+                arrowColor: "#000",
+                textMonthFontSize: 18,
+              }}
+              style={{ marginBottom: 10 }}
+            />
+            <TouchableOpacity
+              style={styles.saveButton}
+              onPress={handleSave}
+              disabled={loading}
+            >
+              <Text style={styles.saveButtonText}>
+                {loading ? "Saving..." : "Save Date"}
+              </Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
       <Footer />
     </SafeAreaView>
@@ -183,30 +184,11 @@ const CalendarScreen: React.FC<CalendarScreenProps> = () => {
 export default CalendarScreen;
 
 const styles = StyleSheet.create({
-  topBar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingTop: 10,
-  },
-  topBarTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  calendarCard: {
-    flex: 1,
-    marginTop: 10,
-    borderRadius: 20,
-    backgroundColor: "white",
-    overflow: "hidden",
-  },
   wrapper: {
     flex: 1,
-    marginVertical: 30,
-    // margin: 20,
-    // marginTop: 10,
-    // marginBottom: 10,
+    marginTop: 10,
+    marginBottom: 0,
+    marginHorizontal: 0,
     backgroundColor: "#FFF4F4",
     borderRadius: 14,
     elevation: 4,
@@ -215,16 +197,21 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     padding: 16,
   },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 10,
+  },
   title: {
     fontSize: 22,
     fontWeight: "bold",
-    textAlign: "center",
-    marginVertical: 20,
     color: "#000",
   },
   info: {
     fontSize: 16,
     textAlign: "center",
+    marginBottom: 10,
     color: "#333",
   },
   saveButton: {

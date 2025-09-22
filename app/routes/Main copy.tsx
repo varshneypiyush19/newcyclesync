@@ -1,7 +1,7 @@
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router"; // Import the router
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../firebaseConfig";
+import { auth, db } from "../../firebaseConfig";
 
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -16,7 +16,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Footer from "../components/Footer";
+import Footer from "../../components/Footer";
 
 const calculateCyclePhase = (
   lastPeriodDateStr: string,

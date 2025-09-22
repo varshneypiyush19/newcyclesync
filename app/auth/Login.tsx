@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -13,14 +13,21 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { auth, db } from "../firebaseConfig";
+import { auth, db } from "../../firebaseConfig";
 
 export default function LogInScreen() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  console.log("login page");
+  // console.log("login page");
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
+
   const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert("Please enter both email and password.");
@@ -31,13 +38,15 @@ export default function LogInScreen() {
       // After login, check if questionnaire exists
       const user = auth.currentUser;
       if (user) {
+        // router.replace("/Home");
+
         const questionnaireDoc = await getDoc(
           doc(db, "questionnaires", user.uid)
         );
         if (questionnaireDoc.exists()) {
-          router.replace("/Main");
+          router.replace("/routes/Main");
         } else {
-          router.replace("/Home");
+          router.replace("/routes/Home");
         }
       } else {
         Alert.alert("Error", "User not found after login.");
@@ -66,15 +75,17 @@ export default function LogInScreen() {
           keyboardType="email-address"
           value={email}
           onChangeText={setEmail}
+          placeholderTextColor={"grey"}
         />
 
         <View style={styles.passwordContainer}>
           <TextInput
             placeholder="Password"
             secureTextEntry={!showPassword}
-            style={{ flex: 1 }}
+            style={{ flex: 1, color: "#000" }}
             value={password}
             onChangeText={setPassword}
+            placeholderTextColor={"grey"}
           />
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
             <Ionicons
@@ -93,7 +104,7 @@ export default function LogInScreen() {
             style={styles.socialIcon}
           /> */}
           <Image
-            source={require("../assets/images/google.png")}
+            source={require("../../assets/images/google.png")}
             style={styles.socialIcon}
           />
           {/* <Image
@@ -110,7 +121,7 @@ export default function LogInScreen() {
           Don{"'"}t have an account?{" "}
           <Text
             style={styles.loginLink}
-            onPress={() => router.push("/Register")}
+            onPress={() => router.push("/auth/Register")}
           >
             Sign up
           </Text>
@@ -123,25 +134,25 @@ export default function LogInScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#EAA4FA",
+    backgroundColor: "#655950",
   },
   topSection: {
     flex: 1 / 6,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#EAA4FA",
+    backgroundColor: "#655950",
   },
   title: {
     textAlign: "center",
     fontSize: 18,
     fontWeight: "500",
-    color: "#000",
+    color: "#fff",
   },
   bottomSection: {
     flex: 1,
-    backgroundColor: "#FFF",
-    borderTopLeftRadius: 125,
-    borderTopRightRadius: 125,
+    backgroundColor: "#FEFDE9",
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
     paddingHorizontal: 30,
     paddingTop: 80,
     alignItems: "center",
@@ -154,6 +165,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     marginBottom: 20,
+    color: "#000",
   },
   passwordContainer: {
     flexDirection: "row",
@@ -185,7 +197,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   signUpButton: {
-    backgroundColor: "#EAA4FA",
+    backgroundColor: "#655950",
     paddingVertical: 12,
     paddingHorizontal: 60,
     borderRadius: 25,
@@ -201,7 +213,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   loginLink: {
-    color: "#EAA4FA",
+    color: "#655950",
     fontWeight: "600",
   },
 });

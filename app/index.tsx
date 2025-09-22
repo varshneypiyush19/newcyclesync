@@ -4,10 +4,10 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Mainwelcome from "../app/Mainwelcome";
 import Welcome1 from "../assets/images/bg1.png";
 import logo from "../assets/images/newicon.png";
 import { auth, db } from "../firebaseConfig";
+import Mainwelcome from "./Mainwelcome";
 
 export default function WelcomeLayout() {
   const router = useRouter();
@@ -43,9 +43,9 @@ export default function WelcomeLayout() {
           doc(db, "questionnaires", user.uid)
         );
         if (questionnaireDoc.exists()) {
-          router.replace("/Main");
+          router.replace("/routes/Main");
         } else {
-          router.replace("/Home");
+          router.replace("/routes/Home");
         }
       } else {
         setCheckingAuth(false);
@@ -53,35 +53,12 @@ export default function WelcomeLayout() {
     });
     return () => unsubscribe();
   }, [router]);
-  // useEffect(() => {
-  //   const unsubscribe = auth.onAuthStateChanged(async (user) => {
-  //     console.log("auth state changed", user);
-  //     if (user) {
-  //       try {
-  //         const questionnaireDoc = await getDoc(
-  //           doc(db, "questionnaires", user.uid)
-  //         );
-  //         if (questionnaireDoc.exists()) {
-  //           router.replace("/Main");
-  //         } else {
-  //           router.replace("/Home");
-  //         }
-  //       } catch (error) {
-  //         console.error("Error checking questionnaire:", error);
-  //         router.replace("/Home");
-  //       }
-  //     } else {
-  //       setCheckingAuth(false);
-  //     }
-  //   });
-  //   return () => unsubscribe();
-  // }, [router]);
 
   const handleNext = () => {
     if (currentIndex < Texts.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      router.push("/LoginSignup");
+      router.push("/auth/LoginSignup");
     }
   };
 
@@ -96,7 +73,6 @@ export default function WelcomeLayout() {
         }}
       >
         <StatusBar style="dark" />
-        {/* <Text>Hello</Text> */}
         <ActivityIndicator size="large" color="black" />
       </SafeAreaView>
     );

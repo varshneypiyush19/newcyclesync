@@ -22,7 +22,7 @@ export default function CycleRegularity({
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FEFDE9" }}>
       <View
         style={{
-          flex: 1 / 5,
+          paddingTop: 10,
           justifyContent: "space-around",
           // alignItems: "center",
           flexDirection: "row",
@@ -48,7 +48,7 @@ export default function CycleRegularity({
       </View>
 
       <View style={{ flex: 1 }}>
-        <View style={{ alignItems: "center", paddingHorizontal: 50 }}>
+        <View style={{ alignItems: "center" }}>
           <Text style={{ fontSize: 30, textAlign: "center" }}>
             {current.question}
           </Text>

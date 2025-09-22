@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -13,7 +13,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { auth, db } from "../firebaseConfig";
+import { auth, db } from "../../firebaseConfig";
 
 export default function SignUpScreen() {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,6 +24,12 @@ export default function SignUpScreen() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   console.log("signup page");
+
+  const navigation = useNavigation();
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
+
   const handleSignUp = async ({ navigation }: { navigation: any }) => {
     if (!fullName || !email || !password || !confirmPassword) {
       Alert.alert("All fields are required.");
@@ -55,7 +61,7 @@ export default function SignUpScreen() {
         [
           {
             text: "Continue",
-            onPress: () => navigation.replace("Home"), // Or navigate to profile setup
+            onPress: () => router.replace("/routes/Home"), // Or navigate to profile setup
           },
         ]
       );
@@ -85,6 +91,7 @@ export default function SignUpScreen() {
           style={styles.input}
           value={fullName}
           onChangeText={setFullName}
+          placeholderTextColor={"grey"}
         />
 
         <TextInput
@@ -93,15 +100,17 @@ export default function SignUpScreen() {
           keyboardType="email-address"
           value={email}
           onChangeText={setEmail}
+          placeholderTextColor={"grey"}
         />
 
         <View style={styles.passwordContainer}>
           <TextInput
             placeholder="Password"
             secureTextEntry={!showPassword}
-            style={{ flex: 1 }}
+            style={{ flex: 1, color: "#000" }}
             value={password}
             onChangeText={setPassword}
+            placeholderTextColor={"grey"}
           />
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
             <Ionicons
@@ -116,9 +125,10 @@ export default function SignUpScreen() {
           <TextInput
             placeholder="Confirm Password"
             secureTextEntry={!showConfirm}
-            style={{ flex: 1 }}
+            style={{ flex: 1, color: "#000" }}
             value={confirmPassword}
             onChangeText={setConfirmPassword}
+            placeholderTextColor={"grey"}
           />
           <TouchableOpacity onPress={() => setShowConfirm(!showConfirm)}>
             <Ionicons
@@ -133,7 +143,7 @@ export default function SignUpScreen() {
 
         <View style={styles.socialContainer}>
           <Image
-            source={require("../assets/images/google.png")}
+            source={require("../../assets/images/google.png")}
             style={styles.socialIcon}
           />
         </View>
@@ -150,7 +160,7 @@ export default function SignUpScreen() {
           Already have an account?
           <Text
             style={styles.loginLink}
-            onPress={() => router.push("/Login")}
+            onPress={() => router.push("/auth/Login")}
             disabled={loading}
           >
             Log in
@@ -195,6 +205,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     marginBottom: 20,
+    color: "#000000",
   },
   passwordContainer: {
     flexDirection: "row",

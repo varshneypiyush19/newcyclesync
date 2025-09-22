@@ -95,28 +95,7 @@ export default function HomeScreen() {
             })}
           </View>
         </ScrollView>
-        {/* {["21 M", "22 T", "23 W", "24 Today", "25 F", "26 S", "27 S"].map(
-            (d, i) => (
-              <View
-                key={i}
-                style={[
-                  styles.dateItem,
-                  d.includes("Today") && styles.todayBox,
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.dateText,
-                    d.includes("Today") && styles.todayText,
-                  ]}
-                >
-                  {d}
-                </Text>
-              </View>
-            )
-          )} */}
 
-        {/* Period Day & Stats */}
         <View style={styles.statsRow}>
           <View style={styles.periodCircle}>
             <Text style={styles.periodTitle}>Periods</Text>
@@ -207,7 +186,7 @@ export default function HomeScreen() {
         {/* Footer Quote */}
         <View style={styles.quoteBox}>
           <Text style={styles.quoteText}>
-            "Periods are powerful, but so am I" 💪🏼✨
+            {'"'}Periods are powerful, but so am I{'"'} 💪🏼✨
           </Text>
         </View>
       </ScrollView>
